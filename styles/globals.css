@@ -1,0 +1,253 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.grid{
+  width: 1200px;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 12px;
+}
+
+html body{
+  color: #04011d;
+  background-color: #f2f4f4;
+}
+#home_index_scroll{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  height: 80vh;
+}
+
+/* scroll--bar */
+.scroll--bar::-webkit-scrollbar,
+.scroll--bar .home_index_left_scroll::-webkit-scrollbar-thumb {
+  width: 7px;
+  border-radius: 5px;
+}
+.scroll--bar::-webkit-scrollbar-thumb,
+.scroll--bar .home_index_left_scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+}
+
+.form-control:focus{
+  box-shadow: unset !important;
+  border-color: #0068ff !important;
+}
+.f-12{
+  font-size: 12px;
+}
+.mr-2{
+  margin-right: 8px;
+}
+p{
+  margin-bottom: 0 !important;
+}
+.text-grey{
+  color: #858585;
+}
+a{
+  text-decoration: none !important;
+}
+.navbar_top{
+  transition: box-shadow 0.3s;
+}
+.navbar_top.shadow {
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+.image_carousel{
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+}
+
+.nav_top_link.active{
+  color: #0070f3 !important;
+}
+.nav_top_link.active .nav-link{
+  color: #0070f3 !important;
+}
+.nav-link{
+  color: #04011d !important;
+}
+h5.title{
+  font-size: 22px;
+}
+.f-bold{
+  font-weight: bold;
+}
+.grid_5{
+  display: grid;
+  grid-template-columns: repeat(5,auto);
+  grid-gap: 12px;
+}
+.box_item a{
+  display: block;
+  color: #111111;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 12px;
+  overflow: hidden;
+
+}
+.box_item .link_item:hover{
+  color: red;
+}
+.box_item .link_item:hover .img_item{
+  transform: scale(1.05);
+}
+.dropdown_category .dropdown-menu.show{
+  padding: 12px;
+}
+.dropdown_category .dropdown-menu.show .dropdown_category_item{
+  min-width: 25%;
+  margin-bottom: 4px;
+  color: #04011d;
+}
+.icon_input_right{
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.has_icon_left{
+  padding: .375rem 2.5rem !important;
+}
+.icon_input_left{
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.dropdown_category .dropdown-menu.show .dropdown_category_item:hover{
+  color: #0070f3;
+}
+.img_item{
+  width: 100%;
+  height: 160px;
+  transition: all 0.2s ease-in;
+  margin-bottom: 6px;
+}
+.text_3_line_hidden{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.title_a{
+  color: #111111;
+}
+.title_a:hover{
+  color: red;
+}
+.a_style{
+  color: #686868;
+  text-decoration: none;
+}
+.a_style.hasicon{
+  display: flex;
+  align-items: center;
+}
+.a_style.hasicon i{
+  margin-left: 4px;
+}
+.title_blog{
+  font-size: 24px;
+}
+.box_share_btn > button{
+  margin: 0 2px;
+}
+.box_item_right{
+  margin-bottom: 12px;
+}
+.box_item_right a{
+  display: flex;
+}
+.img_item_right{
+  width: 100px;
+  height: 68px; 
+}
+.box_item_right p{
+  margin-left: 12px;
+}
+.container_auth{
+  min-height: 80vh;
+  display: grid;
+  place-items: center;
+}
+.signup-form {
+  width: 480px;
+  padding: 32px;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 2px 4px 8px #6b728040;
+}
+.header_auth {
+  margin-bottom: 24px;
+}
+
+h2.title{
+  font-size: 28px;
+  font-weight: bold;
+}
+.text-right{
+  text-align: right;
+}
+input::placeholder{
+  color: #6b7280;
+}
+.form-group{
+  margin-bottom: 12px;
+}
+.pointer{
+  cursor: pointer;
+}
+.social-icon{
+  margin-right: 8px;
+}
+.social-icon img{
+  width: 32px;
+  height: 32px;
+}
+.avatar img{
+  border-radius: 50%;
+}
+.time_timeline{
+  font-size: 11px;
+  color: #828d99;
+}
+.image-grid{
+  display: flex;
+  flex-wrap: wrap;
+}
+.box_image_before{
+  position: relative;
+  margin-right: 12px;
+}
+.btn_delete_img{
+  position: absolute;
+  top: -11px;
+  right: -8px;
+  color: #ff0000;
+}
+@-webkit-keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
