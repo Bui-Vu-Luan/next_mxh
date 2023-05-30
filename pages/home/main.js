@@ -463,7 +463,7 @@ function main() {
                                                                             item.url_image.map((v_img, k_img) => {
                                                                                 return (
                                                                                     <div className='box_image_before' key={k_img}>
-                                                                                        <img src={v_img} width={'80'} height={'80'} />
+                                                                                        <img src={v_img} class="image_render" />
                                                                                     </div>
                                                                                 )
                                                                             })
