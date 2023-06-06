@@ -7,6 +7,8 @@ import Script from 'next/script'
 
 import { Container } from 'react-bootstrap';
 import NavTop from "./navTop"
+import MenuLeft from "./MenuLeft"
+
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -25,23 +27,21 @@ export default function App({ Component, pageProps }) {
     }, [])
     return (
         <div>
-
-            {/* <div className="loadingFirst">
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                        <div className="wave"></div>
-                    </div>  */}
             <>
                 {showHeader && <NavTop />}
                 <div className='grid'>
-                    <Component {...pageProps} />
+                    <div className='row'>
+                        <div className='col-sm-4'>
+                            <div className='card'>
+                                <div className='card-body'>
+                                    <MenuLeft />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='col-sm-8'>
+                            <Component {...pageProps} />
+                        </div>
+                    </div>
                 </div>
                 {/* <Script src="http://localhost:3000/js/custom.js" /> */}
                 {/* <script src={GlobalJS.BASE_URL + "/app-assets/js/bootstrap.min.js"} /> */}

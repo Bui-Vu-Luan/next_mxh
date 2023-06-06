@@ -15,7 +15,7 @@ import { database } from '@/firebaseConfig/config';
 
 import { useRouter } from 'next/router';
 import * as GlobalJs from "../../public/js/global"
-import { ref, set, push, get, child, orderByChild, limitToLast, query, orderByValue, limitToFirst, onValue, equalTo } from "firebase/database";
+import { ref, set, push, get, query, onValue, limitToLast } from "firebase/database";
 import { getDownloadURL, getStorage, ref as storeRef, uploadBytes } from "firebase/storage";
 const storage = getStorage();
 const auth = getAuth();
@@ -45,65 +45,12 @@ function main() {
     const [description, setDescription] = useState('');
     const [isSubmitTimeline, setIsSubmitTimeLine] = useState(false)
     const [open, setOpen] = useState(false);
-    const [dataPosts, setDataPost] = useState([]);
+    const [dataTimeline, setdataTimeline] = useState();
     const [imagePost, setImagePost] = useState([])
     const [videoPost, setVideoPost] = useState([])
     const [loading, setLoading] = useState(false)
     let [imgArr, setImgArr] = useState([])
 
-    var data = [
-        {
-            id: 1,
-            title: "Công nghệ Blockchain là gì? Tiềm năng & ứng dụng thực tế Công nghệ Blockchain là gì? Tiềm năng & ứng dụng thực tế",
-            img: Image1.src,
-            permalink: "cong-nghe-blockchain-la-gi"
-        },
-        {
-            id: 2,
-            title: "Những cái “khó” khi mới học lập trình",
-            img: Image2.src,
-        },
-        {
-            id: 3,
-            title: "Phiên bản LTS là gì? Khi nào nên sử dụng phiên bản LTS",
-            img: Image3.src,
-        },
-        {
-            id: 4,
-            title: "Công nghệ Blockchain là gì? Tiềm năng & ứng dụng thực tế",
-            img: Image1.src,
-        },
-        {
-            id: 5,
-            title: "Những cái “khó” khi mới học lập trình",
-            img: Image2.src,
-        },
-        {
-            id: 6,
-            title: "Phiên bản LTS là gì? Khi nào nên sử dụng phiên bản LTS",
-            img: Image3.src,
-        },
-        {
-            id: 4,
-            title: "Công nghệ Blockchain là gì? Tiềm năng & ứng dụng thực tế",
-            img: Image1.src,
-        },
-        {
-            id: 5,
-            title: "Những cái “khó” khi mới học lập trình",
-            img: Image2.src,
-        },
-        {
-            id: 6,
-            title: "Phiên bản LTS là gì? Khi nào nên sử dụng phiên bản LTS",
-            img: Image3.src,
-        },
-        {
-            id: 6,
-            title: "Phiên bản LTS là gì? Khi nào nên sử dụng phiên bản LTS",
-            img: Image3.src,
-        },
-    ]
     const handleChangeStatusTimeline = (item) => {
         setTimelineStatus(item)
         setOpen(false)
@@ -210,7 +157,7 @@ function main() {
         console.log(data_post)
     }
     const getPosts = () => {
-        const dbRef = query(ref(database, "posts"))
+        const dbRef = query(ref(database, "posts"), limitToLast(5))
 
         onValue(dbRef, async (snapshot) => {
             if (snapshot.exists()) {
@@ -222,17 +169,17 @@ function main() {
                     // check is like
                     let count_like = 0;
                     let is_like = false;
-                    // if (result[property].likes) {
-                    //     // count_like = Object.keys(result[property].likes).length;
-                    //     if (result[property].likes[UserInfoData.id]) {
-                    //         is_like = true;
-                    //     }
-                    //     for (const keyLike in result[property].likes) {
-                    //         if (result[property].likes[keyLike]) {
-                    //             count_like += 1;
-                    //         }
-                    //     }
-                    // }
+                    if (result[property].likes) {
+                        // count_like = Object.keys(result[property].likes).length;
+                        if (result[property].likes['4Vdyy5zWU6UbsBSQIIoWQhPycjn1']) {
+                            is_like = true;
+                        }
+                        for (const keyLike in result[property].likes) {
+                            if (result[property].likes[keyLike]) {
+                                count_like += 1;
+                            }
+                        }
+                    }
                     let user_info = {};
                     await getData(`users/${result[property].uid}`).then((snapshot_uid) => {
                         if (snapshot_uid.exists()) {
@@ -266,14 +213,20 @@ function main() {
 
                     data_tmp.push(arr_tmp)
                 }
+                console.log(data_tmp)
                 data_tmp.reverse();
-                setDataPost(data_tmp)
+                setdataTimeline(data_tmp)
             } else {
                 console.log("No data available");
             }
         })
     }
-
+    const handleLike = (item, index) => {
+        let uid = "4Vdyy5zWU6UbsBSQIIoWQhPycjn1";
+        set(ref(database, 'posts/' + item.id + "/likes/"), {
+            [uid]: !item.is_like
+        })
+    }
 
 
     useEffect(() => {
@@ -281,99 +234,89 @@ function main() {
         getPosts();
     }, [])
 
-
     return (
-        <div className='main my-3'>
-            <div className='row'>
-                <div className='col-sm-4'>
-                    <div className='card'>
-                        <div className='card-body'>
-                            123
-                        </div>
-                    </div>
-                </div>
-                <div className='col-sm-8'>
-                    <div id='home_index_scroll' className='scroll--bar'>
-                        <div className="card">
-                            <div className="card-body">
-                                {
-                                    userData && userData.length != 0 ?
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="form-group">
-                                                    <div className='d-flex align-items-center'>
-                                                        <div className="avatar">
-                                                            <Link href={{
-                                                                pathname: '/[slug]',
-                                                                query: { slug: 'luan-vu' },
-                                                            }}>
-                                                                <img
-                                                                    src={userData.photoURL}
-                                                                    alt="user image"
-                                                                    width="32"
-                                                                    height="32" />
-                                                                <span className="avatar-status-online"></span>
-                                                            </Link>
+        <div className='main'>
+            <div id='home_index_scroll' className='scroll--bar'>
+                <div className="card">
+                    <div className="card-body">
+                        {
+                            userData && userData.length != 0 ?
+                                <div className="row">
+                                    <div className="col-12">
+                                        <div className="form-group">
+                                            <div className='d-flex align-items-center'>
+                                                <div className="avatar">
+                                                    <Link href={{
+                                                        pathname: '/[slug]',
+                                                        query: { slug: 'luan-vu' },
+                                                    }}>
+                                                        <img
+                                                            src={userData.photoURL}
+                                                            alt="user image"
+                                                            width="32"
+                                                            height="32" />
+                                                        <span className="avatar-status-online"></span>
+                                                    </Link>
 
-                                                        </div>
-
-                                                        <div style={{ marginLeft: "12px" }}>
-                                                            <span>
-                                                                {userData.username}
-                                                            </span>
-                                                            <NavDropdown
-                                                                title={
-                                                                    <>
-                                                                        <i className={timelineStatus.icon} style={{ marginRight: "4px" }}></i>
-                                                                        {timelineStatus.name}
-                                                                    </>
-                                                                }
-                                                                id={`offcanvasNavbarDropdown-expand-md`}
-                                                                className={`dropdown_category`}
-                                                                show={open}
-                                                                onToggle={(isOpen) => setOpen(isOpen)}
-                                                            >
-                                                                {STATUS_TIMELINE.map(
-                                                                    (___item, ___index) => {
-                                                                        return (
-                                                                            <a onClick={() => handleChangeStatusTimeline(___item)}
-                                                                                style={{ textTransform: 'capitalize' }}
-                                                                                className="dropdown-item dropdown-item-custom d-flex align-items-center" key={___index}>
-                                                                                <i className={___item.icon}></i>
-
-                                                                                <span style={{ marginLeft: "6px" }}>{___item.name}</span>
-                                                                            </a>
-                                                                        );
-                                                                    }
-                                                                )}
-                                                            </NavDropdown>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="mt-50">
-                                                        <textarea
-                                                            className="form-control border-0 shadow-none"
-                                                            id="user-post-textarea"
-                                                            rows="3" value={description}
-                                                            placeholder="Bạn muốn chia sẻ điều gì?.." onChange={(e) => setDescription(e.target.value)}></textarea>
-                                                    </div>
                                                 </div>
-                                                <hr />
-                                                <div className='clearfix'></div>
-                                                <div id='image-grid-main' className='image-grid'>
-                                                    {
-                                                        imagePost.length != 0 ? imagePost.map((v_img, k_img) => {
-                                                            return (
-                                                                <div className='box_image_before' key={k_img}>
-                                                                    <img src={v_img.tmp_link} width={'80'} height={'80'} />
-                                                                    <a className='btn_delete_img' onClick={() => remove_image_before(k_img)} href={void (0)}>
-                                                                        <i className='fa fa-times'></i>
+
+                                                <div style={{ marginLeft: "12px" }}>
+                                                    <span>
+                                                        {userData.username}
+                                                    </span>
+                                                    <NavDropdown
+                                                        title={
+                                                            <>
+                                                                <i className={timelineStatus.icon} style={{ marginRight: "4px" }}></i>
+                                                                {timelineStatus.name}
+                                                            </>
+                                                        }
+                                                        id={`offcanvasNavbarDropdown-expand-md`}
+                                                        className={`dropdown_category`}
+                                                        show={open}
+                                                        onToggle={(isOpen) => setOpen(isOpen)}
+                                                    >
+                                                        {STATUS_TIMELINE.map(
+                                                            (___item, ___index) => {
+                                                                return (
+                                                                    <a onClick={() => handleChangeStatusTimeline(___item)}
+                                                                        style={{ textTransform: 'capitalize' }}
+                                                                        className="dropdown-item dropdown-item-custom d-flex align-items-center" key={___index}>
+                                                                        <i className={___item.icon}></i>
+
+                                                                        <span style={{ marginLeft: "6px" }}>{___item.name}</span>
                                                                     </a>
-                                                                </div>
-                                                            )
-                                                        }) : null
-                                                    }
-                                                    {/* {
+                                                                );
+                                                            }
+                                                        )}
+                                                    </NavDropdown>
+                                                </div>
+                                            </div>
+
+                                            <div className="mt-50">
+                                                <textarea
+                                                    className="form-control border-0 shadow-none"
+                                                    id="user-post-textarea"
+                                                    rows="3" value={description}
+                                                    placeholder="Bạn muốn chia sẻ điều gì?.." onChange={(e) => setDescription(e.target.value)}></textarea>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className='clearfix'></div>
+                                        <div id='image-grid-main' className='image-grid'>
+                                            {
+                                                imagePost.length != 0 ? imagePost.map((v_img, k_img) => {
+                                                    return (
+                                                        <div className='box_image_before' key={k_img}>
+                                                            <img src={v_img.tmp_link} width={'80'} height={'80'} />
+                                                            <a className='btn_delete_img' onClick={() => remove_image_before(k_img)} href={void (0)}>
+                                                                <i className='fa fa-times'></i>
+                                                            </a>
+                                                        </div>
+                                                    )
+                                                }) : null
+                                            }
+                                            {/* {
                                                         videoPost.length != 0 ? videoPost.map((v_video, k_video) => {
                                                             return (
                                                                 <div className='box_image_before' key={k_video}>
@@ -385,107 +328,111 @@ function main() {
                                                             )
                                                         }) : null
                                                     } */}
-                                                </div>
-                                                <div className='d-flex justify-content-between'>
-                                                    <div className='d-flex'>
-                                                        <a href={void (0)} onClick={() => openFileUpload()}>
-                                                            <BiImage title="Upload a picture" className="cursor-pointer text-muted pt-50 mr-1 upload-custom" />
-                                                            <input type="file" multiple onChange={(event) => uploadFile(event)} id="image_upload_timeline" style={{ display: "none" }} />
-                                                        </a>
-                                                    </div>
-                                                    {
-                                                        isSubmitTimeline ?
-                                                            <button class="btn btn-primary" disabled>
-                                                                <span class="spinner-border spinner-border-sm"></span>
-                                                                Loading..
-                                                            </button>
-                                                            :
-                                                            <button className="btn btn-primary text--button" onClick={() => handleAddPost()}>Đăng</button>
-                                                    }
-
-                                                </div>
+                                        </div>
+                                        <div className='d-flex justify-content-between'>
+                                            <div className='d-flex'>
+                                                <a href={void (0)} onClick={() => openFileUpload()}>
+                                                    <BiImage title="Upload a picture" className="cursor-pointer text-muted pt-50 mr-1 upload-custom" />
+                                                    <input type="file" multiple onChange={(event) => uploadFile(event)} id="image_upload_timeline" style={{ display: "none" }} />
+                                                </a>
                                             </div>
-                                        </div>
-                                        :
-                                        <div className='text-center'>
-                                            <Link href='/auth/login'>Đăng nhập</Link> để đăng bài viết
-                                        </div>
-                                }
-                            </div>
-                        </div>
-                        {
-                            data ?
-                                <InfiniteScroll
-                                    dataLength={data.length}
-                                    // next={loadMoreTimeline}
-                                    // hasMore={true}
-                                    scrollableTarget="home_index_scroll"
-                                    loader={<div className="loader" key={0}>Loading ...</div>}
-                                >
-                                    {
-                                        dataPosts && dataPosts.map((item, index) => {
-                                            return (
-                                                <div className='card mt-2' id={`card_post_${item.id}`} key={item.id}>
-                                                    <div className='card-body'>
-                                                        <div className="form-group">
-                                                            <div className='d-flex align-items-center'>
-                                                                <div className="avatar">
-                                                                    <Link href={{
-                                                                        pathname: '/[slug]',
-                                                                        query: { slug: 'luan-vu' },
-                                                                    }}>
-                                                                        <img
-                                                                            src={item.user_info.photoURL}
-                                                                            alt="user image"
-                                                                            width="32"
-                                                                            height="32" />
-                                                                        <span className="avatar-status-online"></span>
-                                                                    </Link>
+                                            {
+                                                isSubmitTimeline ?
+                                                    <button className="btn btn-primary" disabled>
+                                                        <span className="spinner-border spinner-border-sm"></span>
+                                                        Loading..
+                                                    </button>
+                                                    :
+                                                    <button className="btn btn-primary text--button" onClick={() => handleAddPost()}>Đăng</button>
+                                            }
 
-                                                                </div>
-                                                                <div style={{ marginLeft: "12px" }}>
-                                                                    <span>
-                                                                        {item.user_info.username}
-                                                                    </span>
-                                                                    <p className='time_timeline'>
-                                                                        <i className={item.status.icon} style={{ marginRight: "4px" }}></i>
-                                                                        <i>{item.status.name} - {GlobalJs.formatDateText(item.created_date)}</i></p>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                {item.desc}
-                                                            </div>
-                                                            <hr />
-                                                            {
-                                                                item.images && item.images.length != 0 && item.url_image.length != 0 ?
-                                                                    <div className='image-grid'>
-                                                                        {
-                                                                            item.url_image.map((v_img, k_img) => {
-                                                                                return (
-                                                                                    <div className='box_image_before' key={k_img}>
-                                                                                        <img src={v_img} class="image_render" />
-                                                                                    </div>
-                                                                                )
-                                                                            })
-                                                                        }
-                                                                    </div>
-                                                                    : null
-                                                            }
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </InfiniteScroll > : null
+                                        </div>
+                                    </div>
+                                </div>
+                                :
+                                <div className='text-center'>
+                                    <Link href='/auth/login'>Đăng nhập</Link> để đăng bài viết
+                                </div>
                         }
                     </div>
                 </div>
+                {
+                    dataTimeline ?
+                        <InfiniteScroll
+                            dataLength={dataTimeline.length}
+                            // next={loadMoreTimeline}
+                            // hasMore={true}
+                            scrollableTarget="home_index_scroll"
+                            loader={<div className="loader" key={0}>Loading ...</div>}
+                        >
+                            {
+                                dataTimeline && dataTimeline.map((item, index) => {
+                                    return (
+                                        <div className='card mt-2' id={`card_post_${item.id}`} key={item.id}>
+                                            <div className='card-body'>
+                                                <div className="form-group">
+                                                    <div className='d-flex align-items-center'>
+                                                        <div className="avatar">
+                                                            <Link href={{
+                                                                pathname: '/[slug]',
+                                                                query: { slug: 'luan-vu' },
+                                                            }}>
+                                                                <img
+                                                                    src={item.user_info.photoURL}
+                                                                    alt="user image"
+                                                                    width="32"
+                                                                    height="32" />
+                                                                <span className="avatar-status-online"></span>
+                                                            </Link>
 
+                                                        </div>
+                                                        <div style={{ marginLeft: "12px" }}>
+                                                            <span>
+                                                                {item.user_info.username}
+                                                            </span>
+                                                            <p className='time_timeline'>
+                                                                <i className={item.status.icon} style={{ marginRight: "4px" }}></i>
+                                                                <i>{item.status.name} - {GlobalJs.formatDateText(item.created_date)}</i></p>
+                                                        </div>
+                                                    </div>
+                                                    <div className='mb-2'>
+                                                        {item.desc}
+                                                    </div>
+                                                    {
+                                                        item.images && item.images.length != 0 && item.url_image.length != 0 ?
+                                                            <div className='image-grid'>
+                                                                {
+                                                                    item.url_image.map((v_img, k_img) => {
+                                                                        return (
+                                                                            <div className='box_image_before' key={k_img}>
+                                                                                <img src={v_img} className="image_render" />
+                                                                            </div>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </div>
+                                                            : null
+                                                    }
+                                                    <hr />
+                                                    <div className='d-flex'>
+                                                        <a href={void (0)} className={`like_btn btn ${item.is_like ? 'active' : ''}`} onClick={() => handleLike(item, index)}>
+                                                            <i className={`far fa-heart`}></i>
+                                                            <span>Thích</span>
+                                                        </a>
+                                                        <a href={void (0)} className='comment_btn btn'>
+                                                            <i className="far fa-comment"></i>
+                                                            <span>Bình luận</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </InfiniteScroll > : null
+                }
             </div>
-
-
         </div>
     );
 }

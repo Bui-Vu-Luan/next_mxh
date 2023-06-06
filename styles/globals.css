@@ -238,6 +238,50 @@ input::placeholder{
   right: -8px;
   color: #ff0000;
 }
+.link_left{
+  color: #333;
+}
+.link_left.active{
+  color: #0068ff;
+}
+.box_member{
+  background-color: #fff;
+  height: 220px;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+  margin-bottom: 20px;
+  padding: 12px;
+}
+.box_image_member{
+  text-align: center;
+  margin: 12px 0;
+}
+
+.img_member{
+  border-radius: 50%;
+}
+.like_btn,
+.comment_btn{
+  color: #a0a0a0;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  border: 1px solid #dbdbdb !important;
+}
+.like_btn span,
+.comment_btn span{
+  margin-left: 4px;
+}
+.like_btn.active{
+  background-color: #0068ff !important;
+}
+.like_btn.active i,
+.like_btn.active span{
+  color: #fff;
+}
+.comment_btn.active i,
+.comment_btn.active span{
+  color: #0068ff;
+}
 @-webkit-keyframes fadeOut {
   0% {
     opacity: 1;
