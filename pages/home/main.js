@@ -157,7 +157,7 @@ function main() {
         console.log(data_post)
     }
     const getPosts = () => {
-        const dbRef = query(ref(database, "posts"), limitToLast(5))
+        const dbRef = query(ref(database, "posts"), limitToLast(20))
 
         onValue(dbRef, async (snapshot) => {
             if (snapshot.exists()) {
@@ -171,7 +171,7 @@ function main() {
                     let is_like = false;
                     if (result[property].likes) {
                         // count_like = Object.keys(result[property].likes).length;
-                        if (result[property].likes['4Vdyy5zWU6UbsBSQIIoWQhPycjn1']) {
+                        if (result[property].likes[auth.currentUser.uid]) {
                             is_like = true;
                         }
                         for (const keyLike in result[property].likes) {
@@ -213,7 +213,7 @@ function main() {
 
                     data_tmp.push(arr_tmp)
                 }
-                console.log(data_tmp)
+                // console.log(data_tmp)
                 data_tmp.reverse();
                 setdataTimeline(data_tmp)
             } else {
@@ -222,7 +222,7 @@ function main() {
         })
     }
     const handleLike = (item, index) => {
-        let uid = "4Vdyy5zWU6UbsBSQIIoWQhPycjn1";
+        let uid = auth.currentUser.uid;
         set(ref(database, 'posts/' + item.id + "/likes/"), {
             [uid]: !item.is_like
         })
