@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Nav, Navbar, NavDropdown, Form } from 'react-bootstrap';
+import { Button, Nav, Navbar, NavDropdown, Form, Modal } from 'react-bootstrap';
 import Image1 from '../../public/images/cong-nghe-block-chain-la-gi-218x150.png';
 import Image2 from '../../public/images/nhung-cai-kho-khi-moi-hoc-lap-trinh-218x150.png';
 import Image3 from '../../public/images/phien-ban-lts-la-gi-218x150.png';
@@ -9,14 +9,14 @@ import { RiGlobalLine } from 'react-icons/ri';
 import { BsReply } from 'react-icons/bs'
 import Link from 'next/link';
 import { addData, getData } from "@/firebaseConfig/func";
-
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { database } from '@/firebaseConfig/config';
-
 import { useRouter } from 'next/router';
 import * as GlobalJs from "../../public/js/global"
 import { ref, set, push, get, query, onValue, limitToLast } from "firebase/database";
 import { getDownloadURL, getStorage, ref as storeRef, uploadBytes } from "firebase/storage";
+import ModalLikeTemplate from './ModalLike';
+
 const storage = getStorage();
 const auth = getAuth();
 
@@ -50,7 +50,8 @@ function main() {
     const [videoPost, setVideoPost] = useState([])
     const [loading, setLoading] = useState(false)
     let [imgArr, setImgArr] = useState([])
-
+    const [modalLike, setModalLike] = useState(false);
+    const [postDetail, setPostDetail] = useState({});
     const handleChangeStatusTimeline = (item) => {
         setTimelineStatus(item)
         setOpen(false)
@@ -201,7 +202,6 @@ function main() {
                         url_image = urls;
                     }
 
-
                     let arr_tmp = {
                         id: property,
                         is_like: is_like,
@@ -222,13 +222,17 @@ function main() {
         })
     }
     const handleLike = (item, index) => {
+
         let uid = auth.currentUser.uid;
         set(ref(database, 'posts/' + item.id + "/likes/"), {
             [uid]: !item.is_like
         })
     }
 
-
+    const ShowModalLike = (item) => {
+        setPostDetail(item)
+        setModalLike(!modalLike)
+    }
     useEffect(() => {
         checkLogin()
         getPosts();
@@ -414,6 +418,11 @@ function main() {
                                                             : null
                                                     }
                                                     <hr />
+                                                    <div className='d-flex mb-2'>
+                                                        <a href={void (0)} className='text-dark pointer mr-2' onClick={() => ShowModalLike(item)}>{item.count_like} lượt thích</a>
+                                                        <a href={void (0)} className='text-dark pointer'>0 bình luận</a>
+
+                                                    </div>
                                                     <div className='d-flex'>
                                                         <a href={void (0)} className={`like_btn btn ${item.is_like ? 'active' : ''}`} onClick={() => handleLike(item, index)}>
                                                             <i className={`far fa-heart`}></i>
@@ -433,6 +442,9 @@ function main() {
                         </InfiniteScroll > : null
                 }
             </div>
+            {
+                <ModalLikeTemplate show={modalLike} postDetail={postDetail} />
+            }
         </div>
     );
 }
